@@ -20,8 +20,8 @@ namespace picpaysimplificado.Validator
                 if (!regexCPF.IsMatch(jsonUser.Document))
                     throw new Exception(string.Format("Parâmetro {0} inválido!", nameof(jsonUser.Document)));
 
-                Regex email = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-                if (!regexCPF.IsMatch(jsonUser.Email))
+                Regex regexEmail = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+                if (!regexEmail.IsMatch(jsonUser.Email))
                     throw new Exception(string.Format("Parâmetro {0} inválido!", nameof(jsonUser.Email)));
 
                 if (!System.Enum.IsDefined(typeof(UserType), jsonUser.Type))
