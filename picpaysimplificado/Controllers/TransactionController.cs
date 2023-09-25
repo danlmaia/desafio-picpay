@@ -64,9 +64,9 @@ namespace picpaysimplificado.Controllers
                 _transactionDbContext.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = transfer.Id }, transfer);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
 
             

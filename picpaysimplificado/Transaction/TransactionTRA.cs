@@ -25,7 +25,6 @@ namespace picpaysimplificado.Transaction
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
