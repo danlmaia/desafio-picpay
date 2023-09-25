@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using picpaysimplificado.Enums;
+using picpaysimplificado.Enum;
 
 namespace picpaysimplificado.Jsons
 {

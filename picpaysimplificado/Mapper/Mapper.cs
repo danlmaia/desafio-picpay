@@ -1,6 +1,6 @@
 ﻿using picpaysimplificado.DTOs;
 using picpaysimplificado.Entities;
-using picpaysimplificado.Enums;
+using picpaysimplificado.Enum;
 using picpaysimplificado.Jsons;
 
 namespace picpaysimplificado.Mapper

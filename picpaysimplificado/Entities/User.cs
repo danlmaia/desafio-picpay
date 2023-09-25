@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using picpaysimplificado.Enums;
+using picpaysimplificado.Enum;
 
 namespace picpaysimplificado.Entities
 {

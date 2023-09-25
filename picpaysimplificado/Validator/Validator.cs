@@ -1,4 +1,4 @@
-﻿using picpaysimplificado.Enums;
+﻿using picpaysimplificado.Enum;
 using picpaysimplificado.Jsons;
 using System.Text.RegularExpressions;
 

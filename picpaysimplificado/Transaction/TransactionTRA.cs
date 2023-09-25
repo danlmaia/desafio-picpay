@@ -13,7 +13,7 @@ namespace picpaysimplificado.Transaction
             {
                 User payer = _transactionDbContext.Users.Single(x => x.Id == transferDTO.Payer) ?? throw new Exception(string.Format("Payer com identificador {0} inexistente", transferDTO.Payer));
 
-                if (payer.Type == Enums.UserType.Merchant)
+                if (payer.Type == Enum.UserType.Merchant)
                     throw new Exception(string.Format("Payer com identificador {0} é um Merchant", transferDTO.Payer));
 
                 if (payer.Balance < transferDTO.Amount)
