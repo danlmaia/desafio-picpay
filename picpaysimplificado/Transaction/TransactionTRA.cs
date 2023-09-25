@@ -21,7 +21,7 @@ namespace picpaysimplificado.Transaction
 
                 User receiver = _transactionDbContext.Users.Single(x => x.Id == transferDTO.Receiver) ?? throw new Exception(string.Format("Receiver com identificador {0} inexistente", transferDTO.Receiver));
 
-                RealizeTransfer(payer, receiver, transferDTO.Amount);
+                RealizeTransfer(payer, receiver, transferDTO.Amount, _transactionDbContext);
             }
             catch (Exception)
             {
@@ -30,10 +30,14 @@ namespace picpaysimplificado.Transaction
             }
         }
 
-        public static void RealizeTransfer(User payer, User receiver, decimal amount)
+        public static void RealizeTransfer(User payer, User receiver, decimal amount, TransactionDbContext _transactionDbContext)
         {
             payer.Balance -= amount;
             receiver.Balance += amount;
+
+            _transactionDbContext.Users.Update(payer);
+            _transactionDbContext.Users.Update(receiver);
+
         }
     }
 }
