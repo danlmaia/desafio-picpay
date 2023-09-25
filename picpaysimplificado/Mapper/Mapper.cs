@@ -29,14 +29,6 @@ namespace picpaysimplificado.Mapper
             };
         }
 
-        public static JsonTransfer DTOTransferJson(TransferDTO transferDTO)
-        {
-            return new JsonTransfer
-            {
-                
-            };
-        }
-
         public static User JsonUserToEntity(JsonUser jsonUser)
         {
             System.Enum.TryParse(jsonUser.Type, out UserType Type);
