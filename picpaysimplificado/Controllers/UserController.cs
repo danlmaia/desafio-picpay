@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using picpaysimplificado.Entities;
 using picpaysimplificado.Jsons;
 using picpaysimplificado.Persistence;
@@ -20,32 +19,57 @@ namespace picpaysimplificado.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _transactionDbContext.Users.ToList();
+            try
+            {
+                var users = _transactionDbContext.Users.ToList();
 
-            return Ok(users);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user = _transactionDbContext.Users.SingleOrDefault(x => x.Id == id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = _transactionDbContext.Users.SingleOrDefault(x => x.Id == id);
 
-            return Ok(user);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost("/User")]
         public IActionResult GenerateUser(JsonUser jsonUser)
         {
-            User user = Mapper.Mapper.JsonUserToEntity(jsonUser);
+            try
+            {
+                Validator.Validator.ValidateUser(jsonUser);
 
-            _transactionDbContext.Users.Add(user);
-            _transactionDbContext.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+                User user = Mapper.Mapper.JsonUserToEntity(jsonUser);
+
+                _transactionDbContext.Users.Add(user);
+                _transactionDbContext.SaveChanges();
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
