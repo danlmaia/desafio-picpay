@@ -24,7 +24,9 @@ namespace picpaysimplificado.Validator
                 if (!regexEmail.IsMatch(jsonUser.Email))
                     throw new Exception(string.Format("Parâmetro {0} inválido!", nameof(jsonUser.Email)));
 
-                if (!System.Enum.IsDefined(typeof(UserType), jsonUser.Type))
+                int.TryParse(jsonUser.Type, out int type);
+
+                if (!System.Enum.IsDefined(typeof(UserType), type))
                     throw new Exception(string.Format("Parâmetro {0} inválido!", nameof(jsonUser.Type)));
             }
             catch (Exception ex)
