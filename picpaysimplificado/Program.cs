@@ -5,10 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//var connectionString = builder.Configuration.GetConnectionString("TransactionCs");
+var connectionString = builder.Configuration.GetConnectionString("TransactionCs");
 
 // memoria
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("TransactionDb"));
+builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

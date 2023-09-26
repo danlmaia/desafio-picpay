@@ -14,7 +14,7 @@ namespace picpaysimplificado.Controllers
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public TransactionController(ApplicationDbContext ApplicationDbContext) 
+        public TransactionController(ApplicationDbContext ApplicationDbContext)
         {
             _applicationDbContext = ApplicationDbContext;
         }
@@ -46,7 +46,7 @@ namespace picpaysimplificado.Controllers
                 throw;
             }
 
-            
+
         }
 
         [HttpPost]
@@ -54,6 +54,8 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
+                TryValidateModel(jsonTransfer);
+
                 TransferDTO transferDTO = Mapper.Mapper.JsonTransferDTO(jsonTransfer);
 
                 TransactionTRA.ValidateTransfer(transferDTO, _applicationDbContext);
@@ -68,9 +70,50 @@ namespace picpaysimplificado.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut("CancelTransfer/{id}")]
+        public IActionResult CancelTransfer(int id)
+        {
+            try
+            {
+                TryValidateModel(id);
+
+                TransactionTRA.CancelTransfer(id, _applicationDbContext);
+
+                _applicationDbContext.SaveChanges();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(ex.Message);
+            }
 
             
-            
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTransfer(int id)
+        {
+            try
+            {
+                var transfer = _applicationDbContext.Transactions.SingleOrDefault(x => x.Id == id);
+
+                if (transfer == null)
+                {
+                    return NotFound();
+                }
+
+                _applicationDbContext.Transactions.Remove(transfer);
+                _applicationDbContext.SaveChanges();
+
+                return Ok(transfer);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

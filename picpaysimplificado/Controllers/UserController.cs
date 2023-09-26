@@ -9,11 +9,11 @@ namespace picpaysimplificado.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDbContext _ApplicationDbContext;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public UserController(ApplicationDbContext ApplicationDbContext)
+        public UserController(ApplicationDbContext applicationDbContext)
         {
-            _ApplicationDbContext = ApplicationDbContext;
+            _applicationDbContext = applicationDbContext;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
-                var users = _ApplicationDbContext.Users.ToList();
+                var users = _applicationDbContext.Users.ToList();
 
                 return Ok(users);
             }
@@ -38,7 +38,7 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
-                var user = _ApplicationDbContext.Users.SingleOrDefault(x => x.Id == id);
+                var user = _applicationDbContext.Users.SingleOrDefault(x => x.Id == id);
 
                 if (user == null)
                 {
@@ -53,22 +53,76 @@ namespace picpaysimplificado.Controllers
             }
         }
 
-        [HttpPost("/User")]
+        [HttpPost("/GenerateUser")]
         public IActionResult GenerateUser(JsonUser jsonUser)
         {
             try
             {
+                TryValidateModel(jsonUser);
                 Validator.Validator.ValidateUser(jsonUser);
 
                 User user = Mapper.Mapper.JsonUserToEntity(jsonUser);
 
-                _ApplicationDbContext.Users.Add(user);
-                _ApplicationDbContext.SaveChanges();
+                _applicationDbContext.Users.Add(user);
+                _applicationDbContext.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(JsonUser jsonUser, int id)
+        {
+            try
+            {
+                TryValidateModel(jsonUser);
+                Validator.Validator.ValidateUser(jsonUser);
+
+                var user = _applicationDbContext.Users.SingleOrDefault(x => x.Id == id);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.Update(jsonUser);
+
+                _applicationDbContext.Users.Remove(user);
+                _applicationDbContext.SaveChanges();
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                var user = _applicationDbContext.Users.SingleOrDefault(x => x.Id == id);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                _applicationDbContext.Users.Remove(user);
+                _applicationDbContext.SaveChanges();
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
     }

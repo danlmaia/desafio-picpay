@@ -29,10 +29,47 @@ namespace picpaysimplificado.Transaction
             }
         }
 
+        public static void CancelTransfer(int id, ApplicationDbContext _applicationDbContext)
+        {
+            try
+            {
+                var transfer = _applicationDbContext.Transactions.SingleOrDefault(x => x.Id == id);
+
+                if (transfer == null)
+                    throw new Exception(string.Format("Transferência com identificador {0} não existe!", transfer.Id));
+
+                var payer = _applicationDbContext.Users.SingleOrDefault(x => x.Id == transfer.Payer);
+
+                if (payer == null)
+                    throw new Exception(string.Format("pagador com identificador {0} não existe!", payer.Id));
+
+                var receiver = _applicationDbContext.Users.SingleOrDefault(x => x.Id == transfer.Receiver);
+
+                if (receiver == null)
+                    throw new Exception(string.Format("receiver com identificador {0} não existe!", receiver.Id));
+
+                RefoundTransfer(payer, receiver, transfer.Amount, _applicationDbContext);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public static void RealizeTransfer(User payer, User receiver, decimal amount, ApplicationDbContext _applicationDbContext)
         {
             payer.Balance -= amount;
             receiver.Balance += amount;
+
+            _applicationDbContext.Users.Update(payer);
+            _applicationDbContext.Users.Update(receiver);
+
+        }
+
+        public static void RefoundTransfer(User payer, User receiver, decimal amount, ApplicationDbContext _applicationDbContext)
+        {
+            payer.Balance += amount;
+            receiver.Balance -= amount;
 
             _applicationDbContext.Users.Update(payer);
             _applicationDbContext.Users.Update(receiver);

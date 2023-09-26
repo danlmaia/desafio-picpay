@@ -1,4 +1,7 @@
-﻿namespace picpaysimplificado.Entities
+﻿using picpaysimplificado.Jsons;
+using System.Reflection.Metadata;
+
+namespace picpaysimplificado.Entities
 {
     public class Transfer
     {
@@ -6,9 +9,9 @@
 
         public decimal Amount { get; set; }
 
-        public required int Payer { get; set; }
+        public required long Payer { get; set; }
 
-        public required int Receiver { get; set; }
+        public required long Receiver { get; set; }
 
         public DateTime Date { get; set; }
     }
