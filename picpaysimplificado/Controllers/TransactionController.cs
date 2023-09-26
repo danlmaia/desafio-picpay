@@ -12,17 +12,17 @@ namespace picpaysimplificado.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly TransactionDbContext _transactionDbContext;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public TransactionController(TransactionDbContext transactionDbContext) 
+        public TransactionController(ApplicationDbContext ApplicationDbContext) 
         {
-            _transactionDbContext = transactionDbContext;
+            _applicationDbContext = ApplicationDbContext;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var transactions = _transactionDbContext.Transactions.ToList();
+            var transactions = _applicationDbContext.Transactions.ToList();
 
             return Ok(transactions);
         }
@@ -32,7 +32,7 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
-                var transaction = _transactionDbContext.Transactions.SingleOrDefault(x => x.Id == id);
+                var transaction = _applicationDbContext.Transactions.SingleOrDefault(x => x.Id == id);
 
                 if (transaction == null)
                 {
@@ -56,12 +56,12 @@ namespace picpaysimplificado.Controllers
             {
                 TransferDTO transferDTO = Mapper.Mapper.JsonTransferDTO(jsonTransfer);
 
-                TransactionTRA.ValidateTransfer(transferDTO, _transactionDbContext);
+                TransactionTRA.ValidateTransfer(transferDTO, _applicationDbContext);
 
                 Transfer transfer = Mapper.Mapper.DTOTransferEntity(transferDTO);
 
-                _transactionDbContext.Transactions.Add(transfer);
-                _transactionDbContext.SaveChanges();
+                _applicationDbContext.Transactions.Add(transfer);
+                _applicationDbContext.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = transfer.Id }, transfer);
             }
             catch (Exception ex)

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace picpaysimplificado.Persistence
 {
-    public class TransactionDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public TransactionDbContext(DbContextOptions<TransactionDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             
         }

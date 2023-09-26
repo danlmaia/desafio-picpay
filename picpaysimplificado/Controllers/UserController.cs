@@ -9,11 +9,11 @@ namespace picpaysimplificado.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly TransactionDbContext _transactionDbContext;
+        private readonly ApplicationDbContext _ApplicationDbContext;
 
-        public UserController(TransactionDbContext transactionDbContext)
+        public UserController(ApplicationDbContext ApplicationDbContext)
         {
-            _transactionDbContext = transactionDbContext;
+            _ApplicationDbContext = ApplicationDbContext;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
-                var users = _transactionDbContext.Users.ToList();
+                var users = _ApplicationDbContext.Users.ToList();
 
                 return Ok(users);
             }
@@ -38,7 +38,7 @@ namespace picpaysimplificado.Controllers
         {
             try
             {
-                var user = _transactionDbContext.Users.SingleOrDefault(x => x.Id == id);
+                var user = _ApplicationDbContext.Users.SingleOrDefault(x => x.Id == id);
 
                 if (user == null)
                 {
@@ -62,8 +62,8 @@ namespace picpaysimplificado.Controllers
 
                 User user = Mapper.Mapper.JsonUserToEntity(jsonUser);
 
-                _transactionDbContext.Users.Add(user);
-                _transactionDbContext.SaveChanges();
+                _ApplicationDbContext.Users.Add(user);
+                _ApplicationDbContext.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
             }
             catch (Exception ex)
